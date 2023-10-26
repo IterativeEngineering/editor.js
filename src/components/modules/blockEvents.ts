@@ -282,80 +282,9 @@ export default class BlockEvents extends Module {
    *
    * @param {KeyboardEvent} event - keydown
    */
-  private backspace(event: KeyboardEvent): void {
-    const { BlockManager, Caret } = this.Editor;
-    const { currentBlock, previousBlock } = BlockManager;
-
-    /**
-     * If some fragment is selected, leave native behaviour
-     */
-    if (!SelectionUtils.isCollapsed) {
-      return;
-    }
-
-    /**
-     * If caret is not at the start, leave native behaviour
-     */
-    if (!Caret.isAtStart) {
-      return;
-    }
-    /**
-     * All the cases below have custom behaviour, so we don't need a native one
-     */
-    event.preventDefault();
-    this.Editor.Toolbar.close();
-
-    const isFirstInputFocused = currentBlock.currentInput === currentBlock.firstInput;
-
-    /**
-     * For example, caret at the start of the Quote second input (caption) — just navigate previous input
-     */
-    if (!isFirstInputFocused) {
-      Caret.navigatePrevious();
-
-      return;
-    }
-
-    /**
-     * Backspace at the start of the first Block should do nothing
-     */
-    if (previousBlock === null) {
-      return;
-    }
-
-    /**
-     * If prev Block is empty, it should be removed just like a character
-     */
-    if (previousBlock.isEmpty) {
-      BlockManager.removeBlock(previousBlock);
-
-      return;
-    }
-
-    /**
-     * If current Block is empty, just remove it and set cursor to the previous Block (like we're removing line break char)
-     */
-    if (currentBlock.isEmpty) {
-      BlockManager.removeBlock(currentBlock);
-
-      const newCurrentBlock = BlockManager.currentBlock;
-
-      Caret.setToBlock(newCurrentBlock, Caret.positions.END);
-
-      return;
-    }
-
-    const bothBlocksMergeable = areBlocksMergeable(currentBlock, previousBlock);
-
-    /**
-     * If Blocks could be merged, do it
-     * Otherwise, just navigate previous block
-     */
-    if (bothBlocksMergeable) {
-      this.mergeBlocks(previousBlock, currentBlock);
-    } else {
-      Caret.setToBlock(previousBlock, Caret.positions.END);
-    }
+  private backspace(): void {
+    // Apply native behaviour
+    return;
   }
 
   /**
